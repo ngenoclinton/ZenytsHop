@@ -2,7 +2,7 @@ import Image from "next/image";
 import Head from "next/head";
 import NavBar from "../components/NavBarfolder/NavBar";
 import Bannner from "../components/Banner/Bannner";
-import { Product } from "../type";
+import { Product } from "../../type";
 import Products from "../components/products/Products";
 
 interface Props {

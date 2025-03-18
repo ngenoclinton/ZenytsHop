@@ -4,6 +4,7 @@ import NavBar from "../components/NavBarfolder/NavBar";
 import Bannner from "../components/Banner/Bannner";
 import { Product } from "../../type";
 import Products from "../components/products/Products";
+import Footer from "@/components/Footer/Footer";
 
 interface Props {
   productData: Product;
@@ -24,15 +25,17 @@ export default function Home({ productData }: Props) {
       </Head>
 
       <main className="">
-        <NavBar />
-        <div className="contentContainer mx-auto bg-[#e6f1fc] bg-whit">
+        {/* Main Body Section */}
+        <div className="contentContainer mx-auto bg-[#e6f1fc] bg-white">
+          {/* Banner */}
           <Bannner />
+          {/* Products */}
           <Products productData ={productData}/>
         </div>
+        {/* Loader */}
         <h1 className="text-xl text-brown-500 flex text-center justify-center mt-5 items-center">
-          Hi there Welcome to ZenythShop
-        </h1>
-        {/* Make this a loader */}
+          Shop At ZenyT 
+        </h1>{/* Make this a loader */}        
       </main>
     </>
   );

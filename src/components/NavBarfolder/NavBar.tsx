@@ -16,24 +16,27 @@ import {
   NavigationMenuViewport,
 } from "../ui/navigation-menu";
 import { NavigationMenuComponent } from "./NavigationMenu";
-import NavBarBottom from "./NavBarBottom";
+import NavBarBottom from "./BottomNavBar";
+import Link from "next/link";
 
 function NavBar() {
   return (
-    <div className="w-full shadow-lg">
-      <div className="w-full h-full border border-b-[1px] border-b[#ffc107] border-b-green700 border-b-[#f8f9fa] ">
+    <div className="w-full shadow-lg sticky top-0 z-50 bg-[#f8f9fa]">
+      <div className="w-full h-full border border-b-[1px] border-b[#ffc107] border-b-green700 border-b-[#f8f9fa]">
         <div className="container max-auto h-20 px-4 flex items-center justify-between gap-2">
           {/* Logo*/}
-          <div className="navBarHover">
-            <Image
-              src="https://files.oaiusercontent.com/file-4SGGp8JJb5UbwA6sR99CE8?se=2025-03-13T16%3A54%3A52Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D9ff7cb5c-18bb-4fa9-bf1b-7292dcbdb7b1.webp&sig=2KwYihtBcZw0PLlROYStDBvl3FZZqMXCuKolTbixC9M%3D"
-              alt="logo"
-              className=""
-              width={44}
-              height={44}
-            />
-            <h1 className="text-2xl text-[#fd7e14] font-bold">ZenyTsHop</h1>
-          </div>
+          <Link href="/">
+            <div className="navBarHover">
+              <Image
+                src="https://cdn-icons-png.freepik.com/256/13078/13078001.png?ga=GA1.1.1315670878.1727435405&semt=ais_hybrid"
+                alt="logo"
+                className=""
+                width={44}
+                height={44}
+              />
+              <h1 className="text-2xl text-[#fd7e14] font-bold">ZenyTsHop</h1>
+            </div>
+          </Link>
           {/* Logo ends here */}
           {/* Departments start here  */}
           {/* <div className="navBarHover">
@@ -97,15 +100,17 @@ function NavBar() {
           {/* Endn of Accounts */}
 
           {/* Cart starts here */}
-          <div className="navBarHover flex flex-col relative items-center justify-center gap-2 h-12 px-5 rounded-full bg-transparent hover:navBarHover duration-300 text-[#fd7e14]">
-            <BsCartPlus className="text-xl text-red-700 font-semibold" />
-            <p className="text-[14px] -mt-2 text-black">
-              <span className="text-green-900">$</span>0.00
-            </p>
-            <span className="absolute w-4 h-4 bg-[#ffc107]  text-xl text-green-700 -top-2 right-6 rounded-full flex items-center justify-center font-bodyFont text-xs ">
-              0
-            </span>
-          </div>
+          <Link href="/cart">
+            <div className="navBarHover flex flex-col relative items-center justify-center gap-2 h-12 px-5 rounded-full bg-transparent hover:navBarHover duration-300 text-[#fd7e14]">
+              <BsCartPlus className="text-xl text-red-700 font-semibold" />
+              <p className="text-[14px] -mt-2 text-black">
+                <span className="text-green-900">$</span>0.00
+              </p>
+              <span className="absolute w-4 h-4 bg-[#ffc107]  text-xl text-green-700 -top-2 right-6 rounded-full flex items-center justify-center font-bodyFont text-xs ">
+                0
+              </span>
+            </div>
+          </Link>
           {/* Cart start here */}
         </div>
       </div>

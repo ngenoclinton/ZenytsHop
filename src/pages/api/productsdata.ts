@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse} from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
   _id: number;
@@ -16,14 +16,20 @@ type Data = {
   sponsored: boolean;
   deals: boolean;
   newDeals: boolean;
+  flashSale: boolean;
+  itemsLeft?: number; // Optional, only applies if flashSale is true
+  variations?: string[]; // Optional, applies if product has different variations
+  warranty: boolean;
+  warrantyPeriod?: string; // Optional, only applies if warranty is true
+  officialStore: boolean;
 }[];
-
 
 const productsData = [
   {
     _id: 101,
     title: "Samsung Galaxy S23 Ultra",
-    description: "The latest Samsung flagship with an advanced 200MP camera, Snapdragon 8 Gen 2, and stunning AMOLED display.",
+    description:
+      "The latest Samsung flagship with an advanced 200MP camera, Snapdragon 8 Gen 2, and stunning AMOLED display.",
     oldPrice: 1199.99,
     price: 999.99,
     category: "Electronics",
@@ -40,12 +46,19 @@ const productsData = [
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 20,
+    variations: ["256GB", "512GB", "1TB"],
+    warranty: true,
+    warrantyPeriod: "2 Years",
+    officialStore: true,
   },
   {
     _id: 102,
     title: "Nike Air Jordan 1 Retro",
-    description: "Iconic basketball sneakers with high ankle support and premium leather.",
-    oldPrice: 200.00,
+    description:
+      "Iconic basketball sneakers with high ankle support and premium leather.",
+    oldPrice: 200.0,
     price: 149.99,
     category: "Fashion",
     subCategory: "Shoes",
@@ -62,11 +75,18 @@ const productsData = [
     sponsored: true,
     deals: true,
     newDeals: true,
+    flashSale: false,
+    itemsLeft: 20,
+    variations: ["Size 9", "Size 10", "Size 11"],
+    warranty: false,
+    warrantyPeriod: "N/A",
+    officialStore: false,
   },
   {
     _id: 103,
     title: "Apple MacBook Pro M2",
-    description: "Powerful laptop with Apple's M2 chip, Retina display, and all-day battery life.",
+    description:
+      "Powerful laptop with Apple's M2 chip, Retina display, and all-day battery life.",
     oldPrice: 1999.99,
     price: 1799.99,
     category: "Electronics",
@@ -83,11 +103,19 @@ const productsData = [
     sponsored: false,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 10,
+    variations: ["512GB SSD", "1TB SSD"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
+
   {
     _id: 104,
     title: "Sony WH-1000XM5 Wireless Headphones",
-    description: "Industry-leading noise cancellation headphones with 30-hour battery life.",
+    description:
+      "Industry-leading noise cancellation headphones with 30-hour battery life.",
     oldPrice: 399.99,
     price: 349.99,
     category: "Electronics",
@@ -97,18 +125,25 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/44/9698052/1.jpg?5909",
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/73/4974772/1.jpg?7931",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/68/4747061/1.jpg?1584"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/68/4747061/1.jpg?1584",
     ],
     isNew: true,
     sponsored: true,
     deals: false,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 50,
+    variations: ["Black", "Silver"],
+    warranty: true,
+    warrantyPeriod: "1 year",
+    officialStore: true,
   },
   {
     _id: 105,
     title: "Adidas Ultraboost 22",
-    description: "High-performance running shoes with responsive Boost cushioning.",
-    oldPrice: 180.00,
+    description:
+      "High-performance running shoes with responsive Boost cushioning.",
+    oldPrice: 180.0,
     price: 129.99,
     category: "Fashion",
     subCategory: "Shoes",
@@ -117,17 +152,24 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/88/2555591/1.jpg?1524",
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/30/1438661/1.jpg?1342",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/52/1438661/1.jpg?1341"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/52/1438661/1.jpg?1341",
     ],
     isNew: false,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: false,
+    itemsLeft: 0,
+    variations: ["Black", "White", "Blue"],
+    warranty: true,
+    warrantyPeriod: "6 months",
+    officialStore: true,
   },
   {
     _id: 106,
     title: "Apple iPad Pro 12.9-inch M2",
-    description: "The most powerful iPad ever, featuring the M2 chip and Liquid Retina XDR display.",
+    description:
+      "The most powerful iPad ever, featuring the M2 chip and Liquid Retina XDR display.",
     oldPrice: 1299.99,
     price: 1099.99,
     category: "Electronics",
@@ -137,18 +179,26 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/10/5318972/1.jpg?9591",
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/66/7445972/1.jpg?1464",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/48/8844972/1.jpg?4167"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/48/8844972/1.jpg?4167",
     ],
     isNew: true,
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 30,
+    variations: ["Space Gray", "Silver"],
+    warranty: true,
+    warrantyPeriod: "2 years",
+    officialStore: true,
   },
+
   {
     _id: 107,
     title: "Luxury Leather Handbag",
-    description: "Elegant and stylish genuine leather handbag with gold detailing.",
-    oldPrice: 250.00,
+    description:
+      "Elegant and stylish genuine leather handbag with gold detailing.",
+    oldPrice: 250.0,
     price: 189.99,
     category: "Fashion",
     subCategory: "Accessories",
@@ -158,17 +208,24 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/8599671/1.jpg?5229",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/8599671/3.jpg?5229",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/8599671/5.jpg?5229",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/8599671/3.jpg?5229"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/8599671/3.jpg?5229",
     ],
     isNew: true,
     sponsored: false,
     deals: false,
     newDeals: true,
+    flashSale: false,
+    itemsLeft: 0,
+    variations: ["Black", "Brown", "Red"],
+    warranty: true,
+    warrantyPeriod: "1 year",
+    officialStore: true,
   },
   {
     _id: 108,
     title: "Samsung 65-inch QLED 4K TV",
-    description: "Crystal-clear 4K visuals with Quantum Dot technology and HDR support.",
+    description:
+      "Crystal-clear 4K visuals with Quantum Dot technology and HDR support.",
     oldPrice: 1299.99,
     price: 999.99,
     category: "Electronics",
@@ -179,17 +236,24 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9929992/1.jpg?5317",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9929992/2.jpg?5317",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9929992/3.jpg?5317",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9929992/4.jpg?5317"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9929992/4.jpg?5317",
     ],
     isNew: false,
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 20,
+    variations: ["65-inch", "75-inch", "85-inch"],
+    warranty: true,
+    warrantyPeriod: "2 years",
+    officialStore: true,
   },
   {
     _id: 109,
     title: "Dyson Airwrap Complete",
-    description: "High-tech hair styling tool with multiple attachments for curls, waves, and smooth blowouts.",
+    description:
+      "High-tech hair styling tool with multiple attachments for curls, waves, and smooth blowouts.",
     oldPrice: 599.99,
     price: 499.99,
     category: "Beauty & Personal Care",
@@ -199,18 +263,26 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/2149003/2.jpg?6175",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/2149003/5.jpg?6175",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/2149003/6.jpg?6175"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/2149003/6.jpg?6175",
     ],
     isNew: true,
     sponsored: false,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 15,
+    variations: ["Pink", "Blue", "Black"],
+    warranty: true,
+    warrantyPeriod: "1 year",
+    officialStore: false,
   },
+
   {
     _id: 110,
     title: "Christmas Gift Set - Perfume & Skincare",
-    description: "Luxury perfume and skincare gift set, perfect for the holiday season.",
-    oldPrice: 150.00,
+    description:
+      "Luxury perfume and skincare gift set, perfect for the holiday season.",
+    oldPrice: 150.0,
     price: 99.99,
     category: "Seasonal Deals",
     subCategory: "Gift Sets",
@@ -219,17 +291,24 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/06/6587403/1.jpg?4478",
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/42/1028403/1.jpg?5544",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/51/3314682/1.jpg?5696"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/51/3314682/1.jpg?5696",
     ],
     isNew: true,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: true,
+    itemsLeft: 50,
+    variations: ["Standard"],
+    warranty: false,
+    warrantyPeriod: "N/A",
+    officialStore: false,
   },
   {
     _id: 201,
     title: "Apple iPhone 15 Pro Max",
-    description: "Latest iPhone with A17 Pro chip, titanium design, and 48MP camera.",
+    description:
+      "Latest iPhone with A17 Pro chip, titanium design, and 48MP camera.",
     oldPrice: 1299.99,
     price: 1199.99,
     category: "Electronics",
@@ -239,17 +318,24 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/94/2367191/1.jpg?4945",
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/28/5570761/1.jpg?1845",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/79/8370761/1.jpg?0761"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/79/8370761/1.jpg?0761",
     ],
     isNew: true,
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: false,
+    itemsLeft: 0,
+    variations: ["128GB", "256GB", "512GB", "1TB"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
   {
     _id: 202,
     title: "Dell XPS 15",
-    description: "Premium laptop with Intel Core i9, 32GB RAM, and 4K OLED display.",
+    description:
+      "Premium laptop with Intel Core i9, 32GB RAM, and 4K OLED display.",
     oldPrice: 2299.99,
     price: 1999.99,
     category: "Electronics",
@@ -259,18 +345,25 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/115756/1.jpg?1847",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/115756/2.jpg?1847",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/115756/3.jpg?1847"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/115756/3.jpg?1847",
     ],
     isNew: true,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: true,
+    itemsLeft: 25,
+    variations: ["16GB RAM", "32GB RAM"],
+    warranty: true,
+    warrantyPeriod: "2 Years",
+    officialStore: true,
   },
+
   {
     _id: 203,
     title: "Adidas Yeezy Boost 350 V2",
     description: "Limited edition sneakers designed for comfort and style.",
-    oldPrice: 250.00,
+    oldPrice: 250.0,
     price: 199.99,
     category: "Fashion",
     subCategory: "Shoes",
@@ -278,12 +371,18 @@ const productsData = [
     brand: "Adidas",
     images: [
       "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/84/3770761/1.jpg?7816",
-      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/90/643837/1.jpg?0845"
+      "https://ke.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/90/643837/1.jpg?0845",
     ],
     isNew: false,
     sponsored: true,
     deals: false,
     newDeals: true,
+    flashSale: false,
+    itemsLeft: 0,
+    variations: ["US 8", "US 9", "US 10", "US 11"],
+    warranty: false,
+    warrantyPeriod: "N/A",
+    officialStore: false,
   },
   {
     _id: 204,
@@ -298,17 +397,24 @@ const productsData = [
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/74/3165861/1.jpg?7248",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/94/1440052/1.jpg?1710",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/94/1440052/2.jpg?1710"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/94/1440052/2.jpg?1710",
     ],
     isNew: false,
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: true,
+    itemsLeft: 10,
+    variations: ["Disc Edition", "Digital Edition"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
   {
     _id: 205,
     title: "Bose QuietComfort Ultra Headphones",
-    description: "Industry-leading noise cancellation with premium sound quality.",
+    description:
+      "Industry-leading noise cancellation with premium sound quality.",
     oldPrice: 399.99,
     price: 349.99,
     category: "Electronics",
@@ -317,17 +423,25 @@ const productsData = [
     brand: "Bose",
     images: [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/65/7790152/1.jpg?4652",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/65/7790152/2.jpg?4652"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/65/7790152/2.jpg?4652",
     ],
     isNew: true,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: false,
+    itemsLeft: 0,
+    variations: ["Black", "Silver"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
+
   {
     _id: 206,
     title: "Apple Watch Series 9",
-    description: "Advanced health tracking and fitness smartwatch with new S9 chip.",
+    description:
+      "Advanced health tracking and fitness smartwatch with new S9 chip.",
     oldPrice: 499.99,
     price: 429.99,
     category: "Electronics",
@@ -338,18 +452,25 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/17/8050722/1.jpg?0874",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/17/8050722/2.jpg?0874",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/17/8050722/3.jpg?0874",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/17/8050722/4.jpg?0874"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/17/8050722/4.jpg?0874",
     ],
     isNew: true,
     sponsored: true,
     deals: false,
     newDeals: false,
+    flashSale: false,
+    itemsLeft: 15,
+    variations: ["Midnight", "Starlight", "Silver", "Red"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
   {
     _id: 207,
     title: "The North Face Nuptse Jacket",
-    description: "Iconic puffer jacket with down insulation for extreme weather conditions.",
-    oldPrice: 320.00,
+    description:
+      "Iconic puffer jacket with down insulation for extreme weather conditions.",
+    oldPrice: 320.0,
     price: 249.99,
     category: "Fashion",
     subCategory: "Outerwear",
@@ -360,18 +481,23 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/29/4766511/6.jpg?5251",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/29/4766511/1.jpg?5251",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/29/4766511/2.jpg?5251",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/29/4766511/3.jpg?5251",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/29/4766511/4.jpg?5251"
     ],
     isNew: false,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: true,
+    itemsLeft: 8,
+    variations: ["Black", "Blue", "Red"],
+    warranty: false,
+    warrantyPeriod: "N/A",
+    officialStore: false,
   },
   {
     _id: 208,
     title: "Samsung 75-inch Neo QLED 8K TV",
-    description: "Experience stunning visuals with 8K resolution and Quantum Dot technology.",
+    description:
+      "Experience stunning visuals with 8K resolution and Quantum Dot technology.",
     oldPrice: 4999.99,
     price: 3999.99,
     category: "Electronics",
@@ -382,17 +508,25 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/80/6239992/1.jpg?8013",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/80/6239992/2.jpg?8013",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/80/6239992/3.jpg?8013",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/80/6239992/5.jpg?8013"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/80/6239992/5.jpg?8013",
     ],
     isNew: true,
     sponsored: true,
     deals: true,
     newDeals: false,
+    flashSale: false,
+    itemsLeft: 5,
+    variations: ["Standard", "Deluxe Package"],
+    warranty: true,
+    warrantyPeriod: "2 Years",
+    officialStore: true,
   },
+
   {
     _id: 209,
     title: "KitchenAid Artisan Stand Mixer",
-    description: "Powerful kitchen mixer with 10-speed settings and multiple attachments.",
+    description:
+      "Powerful kitchen mixer with 10-speed settings and multiple attachments.",
     oldPrice: 499.99,
     price: 429.99,
     category: "Home & Kitchen",
@@ -403,38 +537,24 @@ const productsData = [
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/72/3205582/1.jpg?8327",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/72/3205582/2.jpg?8327",
       "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/72/3205582/3.jpg?8327",
-      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/72/3205582/4.jpg?8327"
+      "https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/72/3205582/4.jpg?8327",
     ],
     isNew: true,
     sponsored: false,
     deals: true,
     newDeals: true,
+    flashSale: true,
+    itemsLeft: 20,
+    variations: ["Red", "Black", "Silver"],
+    warranty: true,
+    warrantyPeriod: "1 Year",
+    officialStore: true,
   },
-  // {
-  //   _id: 210,
-  //   title: "LEGO Star Wars Millennium Falcon",
-  //   description: "Iconic LEGO set featuring over 7,500 pieces for Star Wars fans.",
-  //   oldPrice: 849.99,
-  //   price: 799.99,
-  //   category: "Toys & Collectibles",
-  //   subCategory: "Building Sets",
-  //   features: "7,541 pieces, Includes Minifigures, Display Stand",
-  //   brand: "LEGO",
-  //   images: [
-  //     "https://example.com/lego-millennium-falcon.jpg",
-  //     "https://example.com/lego-millennium-falcon-box.jpg"
-  //   ],
-  //   isNew: false,
-  //   sponsored: true,
-  //   deals: false,
-  //   newDeals: true,
-  // }
 ];
-
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<Data>
 ) {
   res.status(200).json(productsData);
 }

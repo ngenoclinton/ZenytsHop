@@ -8,10 +8,11 @@ import { FiCheckCircle } from "react-icons/fi";
 import { FiChevronsUp } from "react-icons/fi";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { FaPlaceOfWorship } from "react-icons/fa6";
+import Link from 'next/link';
 
 function NavBarBottom() {
   return (
-    <div className='mx-auto py-2 px-6 flex items-center justify-between max-w-6xl'>
+    <div className='mx-auto py-2 px-6 flex items-center justify-between max-w-6xl sticky top-2 z-50'>
         <NavigationMenuComponent/>  
         {/* <div className='flex items-center justify-evenly gap-4'>
             <div className="flex items-center gap-2">
@@ -30,7 +31,7 @@ function NavBarBottom() {
         </div> */}
         
         <ul className='flex gap-6 text-sm'>
-            <li className='navLi'>Home</li>
+            <Link href="/"><li className='navLi'>Home</li></Link>
             <li className='navLi'>Help Center</li>
             <li className='navLi'>Get the App</li>
             <li className='navLi'>Community</li>

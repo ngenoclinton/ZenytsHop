@@ -34,7 +34,7 @@ export default function Home({ productData }: Props) {
         </div>
         {/* Loader */}
         <h1 className="text-xl text-brown-500 flex text-center justify-center mt-5 items-center">
-          Shop At ZenyT 
+          @ZenyT 
         </h1>{/* Make this a loader */}        
       </main>
     </>

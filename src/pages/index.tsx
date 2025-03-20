@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
 import NavBar from "../components/NavBarfolder/NavBar";
@@ -11,6 +12,21 @@ interface Props {
 }
 
 export default function Home({ productData }: Props) {
+  const [products, setProducts] = useState<Product | null>(null);
+
+  // Store fetched data in localStorage and retrieve it on reload
+  useEffect(() => {
+    if (productData) {
+      localStorage.setItem("productData", JSON.stringify(productData));
+      setProducts(productData);
+    } else {
+      // Load from localStorage if available
+      const storedData = localStorage.getItem("productData");
+      if (storedData) {
+        setProducts(JSON.parse(storedData));
+      }
+    }
+  }, [productData]);
 
   return (
     <>
@@ -25,24 +41,20 @@ export default function Home({ productData }: Props) {
       </Head>
 
       <main className="">
-        {/* Main Body Section */}
         <div className="contentContainer mx-auto bg-[#e6f1fc] bg-white">
-          {/* Banner */}
           <Bannner />
-          {/* Products */}
-          <Products productData ={productData}/>
+          {/* Render Products only if products data is available */}
+          {products ? <Products productData={products} /> : <p>Loading...</p>}
         </div>
-        {/* Loader */}
         <h1 className="text-xl text-brown-500 flex text-center justify-center mt-5 items-center">
           @ZenyT.shop
-        </h1>{/* Make this a loader */}        
+        </h1>
       </main>
     </>
   );
 }
 
-// fetching the products data frombackend
-
+// Fetching the products data from backend
 export const getServerSideProps = async () => {
   const productData = await (
     await fetch("http://localhost:3000/api/productsdata")

@@ -9,10 +9,16 @@ import { GoPlus } from "react-icons/go";
 import { LuScanSearch } from "react-icons/lu";
 import { MdOutlineStarHalf, MdOutlineStar } from "react-icons/md";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/shopperSlice";
+import toast, { Toaster } from 'react-hot-toast';
 
 function Products({ productData }: any) {
+  const dispatch = useDispatch();
+
   return (
     <div className="py-6 px-4 grid grid-cols-4 gap-4 ">
+
       {productData.map((item: Item) => (
         <div
           key={item._id}
@@ -39,7 +45,7 @@ function Products({ productData }: any) {
 
             <Link
               href={{
-                pathname: `product/${item.title}`,
+                pathname: `product/${item._id}`,
                 query: {
                   _id: item._id,
                   title: item.title,
@@ -57,13 +63,14 @@ function Products({ productData }: any) {
                   newDeals: item.newDeals,
                   flashSale: item.flashSale,
                   itemsLeft: item.itemsLeft, // Optional, only applies if flashSale is true
+                  quantity:item.quantity,
                   variations: item.variations, // Optional, applies if product has different variations
                   warranty: item.warranty,
                   warrantyPeriod: item.warrantyPeriod, // Optional, only applies if warranty is true
                   officialStore: item.officialStore,
                 },
               }}
-              as={`product/${item.title}`}
+              as={`product/${item._id}`}
             >
               {" "}
               <Image
@@ -86,7 +93,36 @@ function Products({ productData }: any) {
             />
           </div>
           <div>
-            <div className="flex justify-evenly items-center w-full">
+            <div
+              onClick={() =>
+                dispatch(
+                  addToCart({
+                    _id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    oldPrice: item.oldPrice,
+                    price: item.price,
+                    category: item.category,
+                    subCategory: item.subCategory,
+                    features: item.features,
+                    brand: item.brand,
+                    images: item.images,
+                    isNew: item.isNew,
+                    sponsored: item.sponsored,
+                    deals: item.deals,
+                    newDeals: item.newDeals,
+                    flashSale: item.flashSale,
+                    itemsLeft: item.itemsLeft, // Optional, only applies if flashSale is true
+                    quantity:item.quantity,
+                    variations: item.variations, // Optional, applies if product has different variations
+                    warranty: item.warranty,
+                    warrantyPeriod: item.warrantyPeriod, // Optional, only applies if warranty is true
+                    officialStore: item.officialStore,
+                  })
+                ) && toast.success(`${item.title.substring(0,20)} is added to cart`)
+              }              
+              className="flex justify-evenly items-center w-full text-white"
+            >
               <Button
                 variant="outline"
                 className="flex flex-1 w-full text-white hover:text-white bg-[#dc3545] hover:bg-[#fd7e14] hover:bg-[#dc3545]  rounded-full p-2 cursor-pointer"
@@ -94,6 +130,7 @@ function Products({ productData }: any) {
                 + Buy
               </Button>
             </div>
+
             <Link href="">
               <div className="px-1">
                 <p className="text-lg font-semibold py-2">
@@ -126,6 +163,18 @@ function Products({ productData }: any) {
           </div>
         </div>
       ))}
+
+      {/* toast */}
+      <Toaster
+      reverseOrder={false}
+      position="top-center"
+      toastOptions={{
+        style:{
+          borderRadius:"8px",
+          background:"#333",
+          color:"#fff"
+        }
+      }}/>
     </div>
   );
 }

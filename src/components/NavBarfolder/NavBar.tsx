@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../public/assets/myimages/cartLogo.png";
 import { BsSearch } from "react-icons/bs";
 import { AiOutlineUser } from "react-icons/ai";
@@ -18,8 +18,24 @@ import {
 import { NavigationMenuComponent } from "./NavigationMenu";
 import NavBarBottom from "./BottomNavBar";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 function NavBar() {
+  const [totalAmount, setTotalAmount] = useState<string>("");
+
+  const cartData = useSelector((state:any)=> state.shopper.cartItems); 
+  console.log(cartData);
+  const totalQuantity = useSelector((state:any)=> state.shopper.totalQuantity); 
+
+  useEffect(()=>{
+    let price = 0
+    cartData.map((item:any)=>{
+      price = price + item.price * item.quantity, 0; 
+    })
+    setTotalAmount(price.toFixed(2));
+  },[cartData]); 
+
+console.log(totalQuantity);
   return (
     <div className="w-full shadow-lg sticky top-0 z-50 bg-[#f8f9fa]">
       <div className="w-full h-full border border-b-[1px] border-b[#ffc107] border-b-green700 border-b-[#f8f9fa]">
@@ -63,9 +79,6 @@ function NavBar() {
           {/*  */}
 
           {/*  */}
-          {/*  Menu*/}
-          {/* <NavigationMenuComponent/> */}
-          {/* End of menue */}
           {/* Start Search */}
           <div className="h-10 flex flex-1 relative cursor-pointer">
             <input
@@ -104,10 +117,10 @@ function NavBar() {
             <div className="navBarHover flex flex-col relative items-center justify-center gap-2 h-12 px-5 rounded-full bg-transparent hover:navBarHover duration-300 text-[#fd7e14]">
               <BsCartPlus className="text-xl text-red-700 font-semibold" />
               <p className="text-[14px] -mt-2 text-black">
-                <span className="text-green-900">$</span>0.00
+                <span className="text-green-900">$</span>{isNaN(Number(totalAmount)) ? '0.00' : totalAmount.replace(/\d(?=(\d{3})+\.)/g, "$&,")}
               </p>
               <span className="absolute w-4 h-4 bg-[#ffc107]  text-xl text-green-700 -top-2 right-6 rounded-full flex items-center justify-center font-bodyFont text-xs ">
-                0
+                {totalQuantity > 0 ? totalQuantity : 0}
               </span>
             </div>
           </Link>

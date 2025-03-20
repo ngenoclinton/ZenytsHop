@@ -14,7 +14,8 @@ export interface Product {
   deals: boolean;
   newDeals: boolean;
   flashSale: boolean;
-  itemsLeft?: number; // Optional, only applies if flashSale is true
+  itemsLeft?: number;
+  quantity:number; // Optional, only applies if flashSale is true
   variations?: string[]; // Optional, applies if product has different variations
   warranty: boolean;
   warrantyPeriod?: string; // Optional, only applies if warranty is true
@@ -37,9 +38,40 @@ export interface Product {
     deals: boolean;
     newDeals: boolean;
     flashSale: boolean;
-    itemsLeft?: number; // Optional, only applies if flashSale is true
+    itemsLeft?: number;
+    quantity:number; // Optional, only applies if flashSale is true
     variations?: string[]; // Optional, applies if product has different variations
     warranty: boolean;
     warrantyPeriod?: string; // Optional, only applies if warranty is true
     officialStore: boolean;
   };
+
+  export interface StoreProduct {
+    _id: number;
+    title: string;
+    description: string;
+    oldPrice: number;
+    price: number;
+    category: string;
+    subCategory: string;
+    features: string;
+    brand: string;
+    images: string[];
+    isNew: boolean;
+    sponsored: boolean;
+    deals: boolean;
+    newDeals: boolean;
+    flashSale: boolean;
+    itemsLeft?: number;
+    quantity:number; // Optional, only applies if flashSale is true
+    variations?: string[]; // Optional, applies if product has different variations
+    warranty: boolean;
+    warrantyPeriod?: string; // Optional, only applies if warranty is true
+    officialStore: boolean;
+  }
+
+  export interface UserInfo{
+    _id:string,
+    name:string,
+    email:string
+  }
